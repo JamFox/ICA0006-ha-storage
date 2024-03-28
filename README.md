@@ -20,6 +20,7 @@ OS: Ubuntu 22.04.3 LTS
 | Server208 | 192.168.161.208 | student | student1234 |
 | Server209 | 192.168.161.209 | student | student1234 |
 
-We are using [Ansible](https://docs.ansible.com/) for automation.
+We are using <a href="https://docs.ansible.com/" target="_blank">Ansible</a> for automation.
 
-[GlusterFS](https://docs.gluster.org/en/main/) is our choice of network filesystem.
+
+<a href="https://docs.gluster.org/en/main/" target="_blank">GlusterFS</a> is our choice of network filesystem.
