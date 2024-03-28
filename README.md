@@ -19,3 +19,7 @@ OS: Ubuntu 22.04.3 LTS
 | Server207 | 192.168.161.207 | student | student1234 |
 | Server208 | 192.168.161.208 | student | student1234 |
 | Server209 | 192.168.161.209 | student | student1234 |
+
+We are using [Ansible](https://docs.ansible.com/) for automation.
+
+[GlusterFS](https://docs.gluster.org/en/main/) is our choice of network filesystem.
