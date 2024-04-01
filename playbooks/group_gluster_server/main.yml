@@ -1,4 +1,4 @@
-- name: PLAYBOOK FOR HOST 'GLUSTER SERVERS'
+- name: PLAYBOOK FOR GROUP 'GLUSTER SERVERS'
   hosts: gluster_server
   remote_user: student
   become: true
@@ -9,5 +9,6 @@
   roles:
     - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
     - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
+    - { role: pip,            tags: [all, soft, pip] }
     - { role: resolv_hosts,   tags: [all, resolv_hosts],   when: not (disabled_roles.resolv_hosts | default(false))}
     - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
