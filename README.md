@@ -24,3 +24,14 @@ We are using <a href="https://docs.ansible.com/" target="_blank">Ansible</a> for
 
 
 <a href="https://docs.gluster.org/en/main/" target="_blank">GlusterFS</a> is our choice of network filesystem.
+
+## Ansible usage
+
+Install dependencies: `ansible-galaxy install -r requirements.yml` (force update with `--force`)
+
+Run playbooks:
+
+```bash
+ansible-playbook playbooks/group_gluster_client/main.yml
+ansible-playbook playbooks/group_gluster_server/main.yml
+```

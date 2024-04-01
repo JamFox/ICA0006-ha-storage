@@ -1,0 +1,67 @@
+vars_common_all_local_domain: "eleven"
+manage_hostname: true
+hostname: "{{ ansible_hostname }}.{{ vars_common_all_local_domain }}"
+#manage_resolv: true
+#nameservers:
+#  - ""
+searchdomain: "{{ eleven }}"
+manage_hosts: true
+hosts_entries:
+  - "{{ hostvars['lab']['ansible_host'] }} lab"
+  - "{{ hostvars['server207']['ansible_host'] }} server207"
+  - "{{ hostvars['server208']['ansible_host'] }} server208"
+  - "{{ hostvars['server209']['ansible_host'] }} server209"
+  - "{{ hostvars['lab']['ansible_host'] }} lab.{{ vars_common_all_local_domain }}"
+  - "{{ hostvars['server207']['ansible_host'] }} server207.{{ vars_common_all_local_domain }}"
+  - "{{ hostvars['server208']['ansible_host'] }} server208.{{ vars_common_all_local_domain }}"
+  - "{{ hostvars['server209']['ansible_host'] }} server209.{{ vars_common_all_local_domain }}"
+
+vars_common_all_soft_apt_tools:
+  - vim
+  - jq
+  - curl
+  - wget
+  - vim
+  - git
+  - python3
+  - net-tools
+  - dnsutils
+  - gpg
+
+vars_common_all_soft_apt_unattended:
+  - unattended-upgrades
+  - apt-listchanges
+
+pip_package: python3-pip
+pip_executable: "{{ 'pip3' if pip_package.startswith('python3') else 'pip' }}"
+
+vars_common_all_main_user: jamfox
+vars_common_all_main_group: sudo
+vars_common_all_main_users:
+  - name: "{{ vars_common_all_main_user }}"
+    primary_group: "{{ vars_common_all_main_group }}"
+    homedir: "/home/{{ vars_common_all_main_user }}"
+    #sudo: "%{{ vars_common_all_main_group }} ALL=(ALL) NOPASSWD: ALL"
+    ssh_authorized_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox"
+  - name: student
+    primary_group: student
+    ssh_authorized_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox"
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCqD+S4wUEj6Nj4b+J5W/QogGIyyZ6UGPhOydc913J1wsabn4VeKa/nSKmyMf6sR4pKmqMPrSyI6PQaGw/Xb9a12JHoiVM4eodVOkMs+lSHNON13UYLT5uAcJwIwTNavq0ueHRJQEc8XPgtmsxjoZ42778tiXN7HTCnzEUyJwXt9DJdbtonDwumnUKpJ5yxWh3nl2U3a2y19hfgQSkJmobhA3K6dMYo7rbVeBOLxKfeyJqoeSiV9w6vroUfEsO5mM4yWc7dqXXxT9/Fs/8kKnEBIOEJst8ClLaO0fkdH/wvk0Mbd8xPxtNiv7wVsFlY92tR+gwmH5grSiBWo6zteSJqWbvCI5GSn00UTpU5BGFk16FnZCMdYBe90mA48KKpnI/+wAKdolZMEuADPF0Lyw2ZsguoKuGGxj0jUSiKGkERrVuPZC8CnXctRGZh3ono9X6LYwE9rUicbXYslPr78RJc5Leypzp4+cDshUAwJ8HpZ3BhI992v4oJaqAZf7oK2Hk= kavink@DESKTOP-9I3QMHP"
+
+vars_common_all_default_sshd:
+  LogLevel: "INFO"
+  PasswordAuthentication: "yes"
+  PermitRootLogin: "prohibit-password"
+  AllowAgentForwarding: "yes"
+  ChallengeResponseAuthentication: "no"
+  GSSAPIAuthentication: "no"
+  KerberosAuthentication: "no"
+  UseDNS: "no"
+  GSSAPICleanupCredentials: "yes"
+  UsePAM: "yes"
+  X11Forwarding: "yes"
+  PrintMotd: "no"
+  AcceptEnv: "LANG LC_*"
+  Subsystem: "sftp /usr/lib/openssh/sftp-server"

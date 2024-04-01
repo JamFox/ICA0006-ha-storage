@@ -1,0 +1,13 @@
+- name: PLAYBOOK FOR HOST 'GLUSTER CLIENTS'
+  hosts: gluster_client
+  remote_user: student
+  become: true
+  vars_files:
+    - ../vars_common_all.yml
+    - ../vars_disabled_roles.yml
+
+  roles:
+    - { role: users_groups,   tags: [all, users_groups],   when: not (disabled_roles.users_groups | default(false))}
+    - { role: soft_apt,       tags: [all, soft, soft_apt], when: not (disabled_roles.soft_apt | default(false)) }
+    - { role: resolv_hosts,   tags: [all, resolv_hosts],   when: not (disabled_roles.resolv_hosts | default(false))}
+    - { role: sshd,           tags: [all, sshd],           when: not (disabled_roles.sshd | default(false))}
