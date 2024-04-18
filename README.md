@@ -36,6 +36,59 @@ ansible-playbook playbooks/group_gluster_client/main.yml
 ansible-playbook playbooks/group_gluster_server/main.yml
 ```
 
+## Installing cli tool for hardware RAID
+
+In /etc/apt/sources.list.d/hpe.list and add the following:
+
+```
+deb http://downloads.linux.hpe.com/SDR/repo/mcp bionic/current non-free
+```
+
+Install the ssacli packages:
+
+```
+apt update
+apt install ssa ssacli ssaducli
+```
+
+Show config:
+
+```
+root@server209: ssacli ctrl all show config
+Smart Array P410i in Slot 0 (Embedded)    (sn: 5001438001ACF8F0)
+   Internal Drive Cage at Port 1I, Box 1 (Index 0), OK
+   Internal Drive Cage at Port 2I, Box 1 (Index 1), OK
+   Port Name: 1I
+   Port Name: 2I
+   Array A (SAS, Unused Space: 0  MB)
+      logicaldrive 1 (1.09 TB, RAID 1+0, OK)
+      physicaldrive 1I:1:1 (port 1I:box 1:bay 1, SAS HDD, 300 GB, OK)
+      physicaldrive 1I:1:2 (port 1I:box 1:bay 2, SAS HDD, 300 GB, OK)
+      physicaldrive 1I:1:3 (port 1I:box 1:bay 3, SAS HDD, 300 GB, OK)
+      physicaldrive 1I:1:4 (port 1I:box 1:bay 4, SAS HDD, 300 GB, OK)
+      physicaldrive 2I:1:5 (port 2I:box 1:bay 5, SAS HDD, 300 GB, OK)
+      physicaldrive 2I:1:6 (port 2I:box 1:bay 6, SAS HDD, 300 GB, OK)
+      physicaldrive 2I:1:7 (port 2I:box 1:bay 7, SAS HDD, 300 GB, OK)
+      physicaldrive 2I:1:8 (port 2I:box 1:bay 8, SAS HDD, 300 GB, OK)
+   SEP (Vendor ID PMCSIERA, Model  SRC 8x6G) 250  (WWID: 5001438001ACF8FF)
+
+root@server209: ssacli ctrl all show status
+Smart Array P410i in Slot 0 (Embedded)
+   Controller Status: OK
+   Cache Status: OK
+   Battery/Capacitor Status: OK
+```
+
+Try to remove disk to test redundancy:
+
+```
+root@server209: ssacli controller slot=0 array A remove drives=1:8
+Error: This operation is not supported with the current configuration. Use the
+       "show" command on devices to show additional details about the
+       configuration.
+       Reason: Feature requires license key
+```
+
 ## Installing Gluster Server:
 
 Add repo:
