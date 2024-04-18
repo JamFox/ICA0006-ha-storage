@@ -36,20 +36,24 @@ ansible-playbook playbooks/group_gluster_client/main.yml
 ansible-playbook playbooks/group_gluster_server/main.yml
 ```
 
+## Installing Gluster Server:
 
-## Installing glusterfs-server:
+Add repo:
 
-###  install dependency and add repo
     sudo apt-get install software-properties-common -y
     sudo add-apt-repository ppa:gluster/glusterfs-11
     sudo apt update
-### install
+
+Install gluster:
+
     sudo apt install glusterfs-server
-### start and enable
+
+Start and enable gluster daemon:
+ 
     sudo systemctl start glusterd
     sudo systemctl enable glusterd
 
-## On each server the ones that isn't the server itself:
+On each server the ones that isn't the server itself:
 
     iptables -I INPUT -p all -s 192.168.180.73 -j ACCEPT
 
@@ -59,17 +63,72 @@ ansible-playbook playbooks/group_gluster_server/main.yml
 
     iptables -I INPUT -p all -s 192.168.161.209 -j ACCEPT
 
-## On 192.168.180.73:
+Or use:
 
-### Probe peers: 
+    ufw allow 24009 
+
+192.168.161.207:
+
+```
+sudo mkdir -p /mnt/glusterfs
+sudo mount /dev/sda2 /mnt/glusterfs
+sudo mkdir -p /mnt/glusterfs/brick1
+echo "/dev/sda2  /mnt/glusterfs  ext4  defaults  0  0" | sudo tee -a /etc/fstab
+```
+
+192.168.161.208:
+
+```
+sudo mkdir -p /mnt/glusterfs
+sudo mount /dev/sda2 /mnt/glusterfs
+sudo mkdir -p /mnt/glusterfs/brick2
+echo "/dev/sda2  /mnt/glusterfs  ext4  defaults  0  0" | sudo tee -a /etc/fstab
+```
+
+192.168.161.209:
+
+```
+sudo mkdir -p /mnt/glusterfs
+sudo mount /dev/sda2 /mnt/glusterfs
+sudo mkdir -p /mnt/glusterfs/brick3
+echo "/dev/sda2  /mnt/glusterfs  ext4  defaults  0  0" | sudo tee -a /etc/fstab
+```
+
+Volume creation:
+
+```
+sudo gluster volume create volume1 replica 3 transport tcp 192.168.161.207:/mnt/glusterfs/brick1 192.168.161.208:/mnt/glusterfs/brick2 192.168.161.209:/mnt/glusterfs/brick3 force
+```
+
+Result: 
+
+```
+student@lab:~$ sudo gluster volume create volume1 replica 3 transport tcp 192.168.161.207:/mnt/glusterfs/brick1 192.168.161.208:/mnt/glusterfs/brick2 192.168.161.209:/mnt/glusterfs/brick3 force
+volume create: volume1: success: please start the volume to access data
+```
+
+Start the volume: 
+
+    sudo gluster volume start volume1
+
+Result: 
+
+```
+student@lab:~$ sudo gluster volume start volume1
+volume start: volume1: success
+```
+
+## Test server status from client VM 192.168.180.73
+
+Probe peers: 
 
     gluster peer probe 192.168.161.207
 
     gluster peer probe 192.168.161.208
 
     gluster peer probe 192.168.161.209
-
-### Result: 
+    
+Result: 
 
 ```
 root@lab:~# gluster peer probe 192.168.161.207
@@ -82,9 +141,11 @@ root@lab:~# gluster peer probe 192.168.161.209
 peer probe: success
 ```
 
-### Check peer status: 
+Check peer status: 
+
     gluster peer status
-### Result: 
+
+Result: 
 
 ```
 root@lab:~# gluster peer status
@@ -103,67 +164,59 @@ Uuid: 3f74dbd2-9b68-4add-ad24-13c0e2f24bad
 State: Peer in Cluster (Connected)
 ```
 
-### Command (kas see oli vajalik? ja kus?): 
-    ufw allow 24009 
+## Client setup
 
-### 192.168.161.207:
-```
-sudo mkdir -p /mnt/glusterfs
-sudo mount /dev/sda2 /mnt/glusterfs
-sudo mkdir -p /mnt/glusterfs/brick1
-echo "/dev/sda2  /mnt/glusterfs  ext4  defaults  0  0" | sudo tee -a /etc/fstab
-```
-
-### 192.168.161.208:
-```
-sudo mkdir -p /mnt/glusterfs
-sudo mount /dev/sda2 /mnt/glusterfs
-sudo mkdir -p /mnt/glusterfs/brick2
-echo "/dev/sda2  /mnt/glusterfs  ext4  defaults  0  0" | sudo tee -a /etc/fstab
-```
-
-### 192.168.161.209:
-```
-sudo mkdir -p /mnt/glusterfs
-sudo mount /dev/sda2 /mnt/glusterfs
-sudo mkdir -p /mnt/glusterfs/brick3
-echo "/dev/sda2  /mnt/glusterfs  ext4  defaults  0  0" | sudo tee -a /etc/fstab
-```
-
-## Volume creation:
-```
-sudo gluster volume create volume1 replica 3 transport tcp 192.168.161.207:/mnt/glusterfs/brick1 192.168.161.208:/mnt/glusterfs/brick2 192.168.161.209:/mnt/glusterfs/brick3 force
-```
-### Result: 
-```
-student@lab:~$ sudo gluster volume create volume1 replica 3 transport tcp 192.168.161.207:/mnt/glusterfs/brick1 192.168.161.208:/mnt/glusterfs/brick2 192.168.161.209:/mnt/glusterfs/brick3 force
-volume create: volume1: success: please start the volume to access data
-```
-### Start the volume: 
-    sudo gluster volume start volume1
-### Result: 
-```
-student@lab:~$ sudo gluster volume start volume1
-volume start: volume1: success
-```
-
-## Client:
 ```
 gluster volume info all
 apt update && sudo apt install --assume-yes glusterfs-client
 mkdir -p /mnt/glusterfs
 mount -t glusterfs 192.168.161.207:/volume1 /mnt/glusterfs
 ```
-### Into vim /etc/fstab:
+
+Add to /etc/fstab:
 
     192.168.161.207:/volume1 /mnt/glusterfs glusterfs defaults,_netdev 0 0
 
-### Check Disk Space Usage: 
+Check Disk Space Usage:
+
     df /mnt/glusterfs/
-### Result: 
+
+Result:
+
 ```
 root@lab:~# df /mnt/glusterfs/
 Filesystem                1K-blocks     Used  Available Use% Mounted on
 192.168.161.207:/volume1 1152222916 24638648 1080503080   3% /mnt/glusterfs
 ```
 
+## Test replication
+
+On client add a file:
+
+```
+root@lab: touch /mnt/glusterfs/testfile.txt
+```
+
+NOTE: Replication only works from clients, if adding files onto bricks from servers, files will not be replicated!
+
+On servers check to see file:
+
+```
+root@192.168.161.208: ls /mnt/glusterfs/brick2
+testfile.txt
+
+root@192.168.161.209: ls /mnt/glusterfs/brick3
+testfile.txt
+
+root@192.168.161.207: ls /mnt/glusterfs/brick1
+testfile.txt
+```
+
+Disable one server to check replication:
+
+```
+root@192.168.161.209: sudo systemctl stop glusterd
+root@lab: ls /mnt/glusterfs/
+testfile.txt
+# Yay, the file still exists!
+```
