@@ -1,6 +1,11 @@
 # ICA0006-ha-storage
 Distributed storage solution for TalTech ICA0006 class
-Authors: Karl-Andreas Turvas, Katariina Maribel Vink, Angelina Vinogradova, Mari-Ann Veende 
+Authors: 
+
+- Karl-Andreas Turvas (team lead, debugger + advisor)
+- Katariina Maribel Vink (main admin)
+- Angelina Vinogradova (admin apprentice and documentor)
+- ~~Mari-Ann Veende~~ (did not show up)
 
  ## ILO is configured for all servers with the following IP addresses:
 | ILO             | SERVER OS IP    |
