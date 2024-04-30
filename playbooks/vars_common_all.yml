@@ -53,7 +53,7 @@ vars_common_all_main_users:
 
 vars_common_all_default_sshd:
   LogLevel: "INFO"
-  PasswordAuthentication: "yes"
+  PasswordAuthentication: "no"
   PermitRootLogin: "prohibit-password"
   AllowAgentForwarding: "yes"
   ChallengeResponseAuthentication: "no"

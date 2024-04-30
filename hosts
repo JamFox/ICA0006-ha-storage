@@ -4,4 +4,4 @@ server208 ansible_host=192.168.161.208 ilo_host=192.168.161.204
 server209 ansible_host=192.168.161.209 ilo_host=192.168.161.205
 
 [gluster_client]
-lab ansible_host=192.168.180.73
+lab ansible_host=192.168.180.55
