@@ -47,7 +47,9 @@ vars_common_all_main_users:
   - name: student
     primary_group: "{{ vars_common_all_main_group }}"
     sudo: "%{{ vars_common_all_main_group }} ALL=(ALL) NOPASSWD: ALL"
+    homedir: "/home/student"
     ssh_authorized_keys:
+      - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIRDkU14E2C9BTh+YN9AS+uwBmgea1m3EZ1h8ObW23AW angvin@taltech.ee"
       - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILayJ7ZP6Z6IDms4ujnz9nRnAJEIXwyto1SbSwfzjqst jamfox"
       - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCqD+S4wUEj6Nj4b+J5W/QogGIyyZ6UGPhOydc913J1wsabn4VeKa/nSKmyMf6sR4pKmqMPrSyI6PQaGw/Xb9a12JHoiVM4eodVOkMs+lSHNON13UYLT5uAcJwIwTNavq0ueHRJQEc8XPgtmsxjoZ42778tiXN7HTCnzEUyJwXt9DJdbtonDwumnUKpJ5yxWh3nl2U3a2y19hfgQSkJmobhA3K6dMYo7rbVeBOLxKfeyJqoeSiV9w6vroUfEsO5mM4yWc7dqXXxT9/Fs/8kKnEBIOEJst8ClLaO0fkdH/wvk0Mbd8xPxtNiv7wVsFlY92tR+gwmH5grSiBWo6zteSJqWbvCI5GSn00UTpU5BGFk16FnZCMdYBe90mA48KKpnI/+wAKdolZMEuADPF0Lyw2ZsguoKuGGxj0jUSiKGkERrVuPZC8CnXctRGZh3ono9X6LYwE9rUicbXYslPr78RJc5Leypzp4+cDshUAwJ8HpZ3BhI992v4oJaqAZf7oK2Hk= kavink@DESKTOP-9I3QMHP"
 
